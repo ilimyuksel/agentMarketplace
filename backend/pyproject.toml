@@ -1,0 +1,63 @@
+[project]
+name = "ai-agent-marketplace"
+version = "0.1.0"
+description = "AI Agent Marketplace & Autonomous Task Economy (hackathon prototype)"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "sqlalchemy[asyncio]>=2.0",
+    "asyncpg>=0.29",
+    "alembic>=1.13",
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+    "redis>=5.0",
+    "google-genai>=1.0",
+    "pgvector>=0.2",
+    "python-dotenv>=1.0",
+    "structlog>=24.1",
+    "tenacity>=8.2",
+    "httpx>=0.27",
+    "rich>=13.7",
+    "websockets>=12.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.3",
+    "mypy>=1.9",
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["backend*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "W"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+# SQLAlchemy's async engine binds to whichever event loop first uses it.
+# A session-scoped loop ensures every async test reuses the same engine
+# pool without cross-loop violations.
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["tests"]
+# Live-Gemini tests are opt-in. A plain `pytest` run executes the unit
+# suite + DB-only integration tests, but skips anything decorated with
+# @pytest.mark.live_gemini. To run those, use `pytest -m live_gemini`
+# (only live tests) or `pytest -m ''` (override the default to run all).
+addopts = "-m 'not live_gemini'"
+markers = [
+    "live_gemini: real Gemini API calls; opt-in via `pytest -m live_gemini`",
+]
