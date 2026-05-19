@@ -26,6 +26,10 @@ class Settings(BaseSettings):
     database_url: str
     redis_url: str = "redis://localhost:6379/0"
 
+    @property
+    def async_database_url(self) -> str:
+        return self.database_url.replace("postgresql://", "postgresql+asyncpg://", 1).replace("postgres://", "postgresql+asyncpg://", 1)
+
     # ---------- Gemini ----------
     gemini_api_key: str
     gemini_model: str = "gemini-2.5-flash"
