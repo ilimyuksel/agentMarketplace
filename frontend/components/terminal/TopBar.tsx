@@ -69,7 +69,7 @@ export function TopBar() {
           )}
         </span>
         <span className={tone.textCls}>backend {tone.text}</span>
-        <span className="text-text-faint">· localhost:8000</span>
+
       </button>
 
       <button

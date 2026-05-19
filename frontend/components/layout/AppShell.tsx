@@ -72,7 +72,7 @@ function OfflineBanner() {
   if (!backendChecked || backendOnline) return null;
   return (
     <div className="bg-amber-500/15 border-b border-amber-500/30 text-amber-200 text-xs px-6 py-2 text-center">
-      Offline mode — backend at localhost:8000 unreachable. Showing simulation data.
+      Offline mode — backend unreachable. Showing simulation data.
     </div>
   );
 }

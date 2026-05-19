@@ -6,7 +6,7 @@ import { api } from "@/lib/api";
 import { applyEvent, isTerminalJob } from "@/lib/wsReducer";
 import { ManagedChannel, WSChannelStatus } from "@/lib/wsManager";
 
-const BACKEND_HOST = "ws://localhost:8000";
+const BACKEND_HOST = process.env.NEXT_PUBLIC_WS_URL ?? "ws://localhost:8000";
 
 interface AppState {
   agents: Agent[];

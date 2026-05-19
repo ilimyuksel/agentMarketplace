@@ -1,6 +1,6 @@
 import { Agent, AgentDetail, Job, Task, Bid, Transaction, JudgeEvaluation, WSEvent, SystemStats, Wallet, VerificationResult } from "@/types";
 
-const API_BASE = "http://localhost:8000/api/v1";
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000") + "/api/v1";
 
 function toCamelKey(key: string): string {
   return key.replace(/_([a-z0-9])/g, (_, c: string) => c.toUpperCase());
@@ -32,7 +32,7 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
 export const api = {
   async healthCheck(): Promise<boolean> {
     try {
-      const res = await fetch("http://localhost:8000/health", {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000") + "/health", {
         signal: AbortSignal.timeout(2000),
       });
       return res.ok;
@@ -141,7 +141,7 @@ export const api = {
   },
 
   connectJobWS(jobId: string, onEvent: (event: WSEvent) => void): WebSocket {
-    const ws = new WebSocket(`ws://localhost:8000/ws/jobs/${jobId}`);
+    const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL ?? "ws://localhost:8000"}/ws/jobs/${jobId}`);
     ws.onmessage = (e) => {
       try { onEvent(snakeToCamel<WSEvent>(JSON.parse(e.data as string))); } catch { /* skip malformed */ }
     };
@@ -149,7 +149,7 @@ export const api = {
   },
 
   connectGlobalWS(onEvent: (event: WSEvent) => void): WebSocket {
-    const ws = new WebSocket("ws://localhost:8000/ws/global");
+    const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL ?? "ws://localhost:8000"}/ws/global`);
     ws.onmessage = (e) => {
       try { onEvent(snakeToCamel<WSEvent>(JSON.parse(e.data as string))); } catch { /* skip malformed */ }
     };
